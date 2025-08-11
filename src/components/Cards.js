@@ -1,88 +1,98 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
-import CardMedia from '@mui/material/CardMedia';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import { Link } from 'react-router-dom';
+import Box from '@mui/material/Box';
 
-export default function MediaCard({data,onEdit}) {
-
-  const [prod, setProd] = useState([])
-
-  // console.log(data, 'data from props')
-
-  useEffect(() => {
-    if (data && data.length > 0) {
-      setProd(data);
-    }
-  }, [data]);
-
-  const handledelete = (id) => {
-    console.log("button clicked", id);
-    fetch(`https://fakestoreapi.com/carts/${id}`, {
-      method: 'DELETE'
-    })
-      .then(response => response.json())
-      .then(data => {
-        // console.log(data)
-        const updatedList = prod.filter(item => item.id !== id);
-        setProd(updatedList);
-      })
-      .catch(error => {
-        console.log("delete failed", error);
-      });
-  };
-
-
-
-
-
+export default function MediaCard({ data, onEdit, onDelete }) {
   return (
+    data.map((item) => (
+      <Card
+        key={item.id}
+        sx={{
+          maxWidth: 300,
+          display: "flex",
+          flexDirection: "column",
+          textAlign: "center",
+          margin: 2,
+          padding: 2,
+          boxShadow: 3,
+          borderRadius: 2,
+        }}
+      >
+        <CardContent>
+          <Typography
+            gutterBottom
+            variant="h6"
+            component="div"
+            sx={{
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+              maxWidth: '100%',
+              height: '48px',
+              fontSize: '18px',
+              display: '-webkit-box',
+              WebkitLineClamp: 2,
+              WebkitBoxOrient: 'vertical'
+            }}
+          >
+            {item.title}
+          </Typography>
 
-    prod.map((item, id) => {
+          <Box display="flex" justifyContent="center" my={2}>
+            <img
+              src={item.image}
+              alt={item.title}
+              style={{ width: '100px', height: "100px", objectFit: 'contain' }}
+            />
+          </Box>
 
+          <Typography variant="subtitle1" color="textSecondary">
+            {item.category}
+          </Typography>
 
+          <Typography variant="h6" color="green">
+            ${item.price}
+          </Typography>
+        </CardContent>
 
-      return (
-        <Card key={item.id} sx={{ maxWidth: 345, display: "flex", flexDirection: "column", textAlign: "center" }}>
-          <div style={{ border: '1px solid #b0a5a540' }}>
-            <CardContent>
-              <Typography gutterBottom variant="h6" component="div" overflow='hidden' textOverflow='ellipsis' maxWidth='216px' height='48px' fontSize='18px' display='-webkit-box' webkit-line-clamp='2' webkit-box-orient='vertical' >
-                {item.title}
-              </Typography>
-
-              <img src={item.image} style={{ width: '100px', height: "100px", objectFit: 'contain' }}></img>
-              <CardContent>
-
-                <Typography gutterBottom variant="h5" component="div">
-                  {item.category}
-                </Typography>
-
-                <Typography gutterBottom variant="h5" component="div" color='green'>
-                  ${item.price}
-                </Typography>
-               
-              </CardContent>
-            </CardContent>
-          </div>
-          <Link to={`/product/view/${item.id}`}>
-            <Button style={{ backgroundColor: "blue", color: "white" }} size="big">View Product</Button>
-          </Link>
-          <CardActions sx={{ justifyContent: 'center' }}>
+        <Box my={1}>
+          <Link to={`/product/view/${item.id}`} style={{ textDecoration: 'none' }}>
             <Button
-              style={{ backgroundColor: "red", color: "white", padding: "10px 14px", width: "160px" }}
-              size="small"
-              onClick={() => handledelete(item.id)}
-            >Delete
+              variant="contained"
+              color="primary"
+              size="medium"
+              fullWidth
+              sx={{ marginBottom: 1 }}
+            >
+              View Product
             </Button>
+          </Link>
+        </Box>
 
-            <Button style={{ backgroundColor: "green", color: "white", padding: "10px 14px", width: "160px" }} size="small" onClick={() => onEdit(item)}>Edit</Button>
-          </CardActions>
-        </Card>
-      )
-    })
+        <CardActions sx={{ justifyContent: 'center', gap: 1 }}>
+          <Button
+            variant="contained"
+            color="error"
+            size="small"
+            onClick={() => onDelete(item.id)}
+          >
+            Delete
+          </Button>
 
+          <Button
+            variant="contained"
+            color="success"
+            size="small"
+            onClick={() => onEdit(item)}
+          >
+            Edit
+          </Button>
+        </CardActions>
+      </Card>
+    ))
   );
 }

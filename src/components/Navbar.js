@@ -30,9 +30,9 @@ export default function ButtonAppBar() {
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
             Home
           </Typography>
-          {/* <Link to="/login"> */}
+        
           <Button color="white" onClick={logout}>Logout</Button>
-          {/* </Link> */}
+         
         </Toolbar>
       </AppBar>
     </Box>

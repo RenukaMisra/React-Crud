@@ -1,4 +1,3 @@
-// import * as React from 'react';
 import { alpha, styled } from '@mui/material/styles';
 import InputBase from '@mui/material/InputBase';
 import Box from '@mui/material/Box';
@@ -52,7 +51,7 @@ export default function Update({ prod, setProd, setDrawerOpen, productToEdit }) 
     description: ''
   });
 
-  // Fill form with existing product data when Prod changes
+
   useEffect(() => {
     if (productToEdit) {
       setItem(productToEdit);

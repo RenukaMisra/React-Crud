@@ -6,7 +6,7 @@ const AuthContext = createContext();
 const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null)
 
-    // const navigate = useNavigate()
+    
     console.log(user,"Userrr")
 
     const secureLogin = (email, password) => {
@@ -37,7 +37,7 @@ const AuthProvider = ({ children }) => {
         window.localStorage.setItem("email", email)
         setUser(email)
       }
-        // // navigate('/home')
+      
     
 
      const logout = (email,password) => {

@@ -7,15 +7,7 @@ const Login = () => {
   const [email,setEmail]= useState('')
   const [password, setPassword] =useState('')
 
-  //  const  {login} = useAuth()
-
-  // const handleLogin=() =>{
-  //   console.log(email,"email entered!")
-  //    console.log(password,"password entered!")
-
-  //   login(email, password)
-  // }
-
+ 
   const  { secureLogin } = useAuth();
 
   const handleLogin = () => {

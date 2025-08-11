@@ -14,6 +14,7 @@ const Product = () => {
   const [editDrawerOpen, setEditDrawerOpen] = useState(false);
   const [editingProduct, setEditingProduct] = useState(null);
   const [page, setPage] = useState(1);
+  const itemsPerPage = 8;
 
   useEffect(() => {
     axios.get('https://fakestoreapi.com/products').then((res) => {
@@ -29,18 +30,35 @@ const Product = () => {
   const handleEditClick = (product) => {
     setEditingProduct(product);
     setEditDrawerOpen(true);
-          
   };
 
-  // Pagination logic
-  const getItemsPerPage = (page) => {
-    if (page === 3) return 4;
-    return 8;
+  const handleProductAdded = (newProduct) => {
+    const updatedList = [...listItem, newProduct];
+    setListItem(updatedList);
+
+    const newTotal = updatedList.length;
+    const newPage = Math.ceil(newTotal / itemsPerPage);
+    setPage(newPage);
+  };
+
+  const handleProductUpdated = (updatedProduct) => {
+    const updatedList = listItem.map(item =>
+      item.id === updatedProduct.id ? updatedProduct : item
+    );
+    setListItem(updatedList);
+  };
+
+  const handleProductDeleted = (id) => {
+    const updatedList = listItem.filter(item => item.id !== id);
+    setListItem(updatedList);
+
+    const newTotal = updatedList.length;
+    const newPage = Math.min(page, Math.ceil(newTotal / itemsPerPage));
+    setPage(newPage);
   };
 
   const getPaginatedProducts = () => {
-    const itemsPerPage = getItemsPerPage(page);
-    const startIndex = page === 3 ? 16 : (page - 1) * 8;
+    const startIndex = (page - 1) * itemsPerPage;
     return listItem.slice(startIndex, startIndex + itemsPerPage);
   };
 
@@ -67,12 +85,20 @@ const Product = () => {
             gap: '20px',
           }}
         >
-          <Cards data={getPaginatedProducts()} onEdit={handleEditClick} setProd={setListItem} />
+          <Cards
+            data={getPaginatedProducts()}
+            onEdit={handleEditClick}
+            onDelete={handleProductDeleted}
+          />
         </div>
       </Grid>
 
       <Stack spacing={2} sx={{ mt: 4, alignItems: 'center' }}>
-        <Pagination count={3} page={page} onChange={handlePageChange} />
+        <Pagination
+          count={Math.ceil(listItem.length / itemsPerPage)}
+          page={page}
+          onChange={handlePageChange}
+        />
       </Stack>
 
       <RightDrawer
@@ -83,6 +109,8 @@ const Product = () => {
         prod={listItem}
         setProd={setListItem}
         productToEdit={editingProduct}
+        onProductAdded={handleProductAdded}
+        onProductUpdated={handleProductUpdated}
       />
     </>
   );
